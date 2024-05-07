@@ -1,0 +1,59 @@
+{% extends 'cfg/layout.html' %}
+
+{% block content %}
+
+    <div class="col-12 bg-light my-5 rounded">
+        <div class="col-12 d-flex">
+            <div class="col-3 p-3 text-dark">
+                <p>Категория: {{ article.category.name }}</p>
+                <h2>{{ article.title }}</h2>
+                <p>Автор: {{ article.created_by.username }}</p>
+                <p class="text-secondary">{{ article.created_at }}</p>
+                <a class="text-dark" style="text-decoration: none;" href="{% url "news_like" article.id %}">
+                    <i class="fa fa-thumbs-up"></i>
+                    {{ article.number_of_likes }}
+                </a>
+            </div>
+    
+            <div class="col-7 p-3">
+                {% if article.image_url %}
+                    <img width="100%" src="{{ article.image_url }}" alt="poster" />
+                {% else %}
+                    <img width="100%" src="{{ article.image.url }}" alt="poster" />
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-12 p-3 text-dark">
+            <p class="text-secondary">{{ article.description|safe }}<p>
+        </div>
+    </div>
+
+    <div class="col-12 bg-light my-5 rounded text-dark">
+        <div class="col-12 p-3 d-flex">
+            <form method="POST" action="{% url "article_comment" article.pk %}">
+                {% csrf_token %}
+
+                {{ comment_form.as_p }}
+
+                <button class="btn btn-success" type="submit">Загрузить</button>
+            </form>
+        </div>
+    </div>
+
+    {% for comment in article.comment_set.all|dictsortreversed:'posted_at' %}
+        <div class="col-12 bg-light my-5 text-dark">
+            <div class="col-12 d-flex">
+                <div class="col-5 p-3">
+                    {{ comment.posted_by.username }}
+                    <br>
+                    {{ comment.posted_at }}
+                </div>
+                <div class="col-7 p-3">
+                    {{ comment.comment }}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+{% endblock content %}

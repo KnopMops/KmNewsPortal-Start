@@ -1,0 +1,28 @@
+{% extends 'cfg/layout.html' %}
+
+{% block content %}
+    
+    {% for new in news %}
+        <div class="col-12 d-flex bg-light my-5 rounded">
+            <div class="col-4 p-4 text-dark">
+                <p>Категория: {{ new.category.name }}</p>
+                <a href="{% url "article_detail" new.id %}"><h3>{{ new.title }}</h3></a>
+                <p>Автор: {{ new.created_by.username }}</p>
+                <p class="text-secondary">05.05.2024</p>
+            </div>
+
+            <div class="col-4 p-4 text-dark">
+                <p class="text-secondary">{{ new.description|safe }}<p>
+            </div>
+
+            <div class="col-4 p-4">
+                {% if new.image_url %}
+                    <img width="100%" src="{{ new.image_url }}" alt="poster" />
+                {% else %}
+                    <img width="100%" src="{{ new.image.url }}" alt="poster" />
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+
+{% endblock content %}
